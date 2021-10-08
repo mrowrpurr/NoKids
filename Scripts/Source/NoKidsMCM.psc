@@ -42,6 +42,7 @@ event OnPageReset(string _)
 endEvent
 
 function LeftColumn()
+    AddHeaderOption("Tracked Children")
     oid_ChildCounter = AddTextOption("Count of tracked children", NoKids.GetTrackedChildCount())
     oid_SearchInput = AddInputOption("Search for child by name", "SEARCH")
     if IsDispayingSearchResults
