@@ -7,8 +7,8 @@ event OnEffectStart(Actor target, Actor caster)
         return
     endIf
 
-    if ! NoKids.IsChildTracked(target)
-        NoKids.TrackChild(target)
+    if ! API.IsChildTracked(target)
+        API.TrackChild(target)
 
         Form replacement = API.GetReplacementForm()
 

@@ -41,6 +41,9 @@ string property CONFIG_KEY_REPLACEMENT_OPTIONS       = "nokids_replacement_optio
 string property CONFIG_KEY_REPLACEMENT_RANDOM        = "nokids_replacement_random"         autoReadonly
 string property CONFIG_KEY_REPLACEMENT_NOTIFICATIONS = "nokids_replacement_notifications"  autoReadonly
 
+string property STORAGE_KEY_CHILD_FORM = "nokids_references" autoReadonly
+string property STORAGE_KEY_CHILD_NAME = "nokids_names"      autoReadonly
+
 bool     property ReplacementIsRandom      auto
 Form     property ReplacementForm          auto
 int      property ReplacementFormCount     auto
@@ -98,40 +101,21 @@ Form function GetReplacementForm()
 endFunction
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;
+;; Reference Tracking
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-int function NoKidsStorage() global
-    int kidsStorage = JDB.solveObj(".noKids")
-    if ! kidsStorage
-        kidsStorage = JMap.object()
-        JDB.solveObjSetter(".noKids", kidsStorage, createMissingKeys = true)
-        JMap.setObj(kidsStorage, "kidsByName", JMap.object())
-        JMap.setObj(kidsStorage, "kidsEnabledByName", JMap.object())
-    endIf
-    return kidsStorage
-endFunction
-
-int function KidsByNameMap() global
-    return JMap.getObj(NoKidsStorage(), "kidsByName")
-endFunction
-
-int function KidsEnabledByNameMap() global
-    return JMap.getObj(NoKidsStorage(), "kidsEnabledByName")
-endFunction
-
-function TrackChild(Actor child) global
+function TrackChild(Actor child)
     string name = child.GetActorBase().GetName()
-    JMap.setForm(KidsByNameMap(), name, child)
-    JMap.setInt(KidsEnabledByNameMap(), name, 0)
+    StorageUtil.FormListAdd(None, STORAGE_KEY_CHILD_FORM, child)
+    StorageUtil.StringListAdd(None, STORAGE_KEY_CHILD_NAME, name)
 endFunction
 
-int function GetTrackedChildCount() global
-    return JMap.count(KidsByNameMap())
+int function GetTrackedChildCount()
+    return StorageUtil.FormListCount(None, STORAGE_KEY_CHILD_FORM)
 endFunction
 
-string[] function SearchChildrenByName(string query) global
-    string[] kidNames = JMap.allKeysPArray(KidsByNameMap())
+string[] function SearchChildrenByName(string query)
+    string[] kidNames = StorageUtil.StringListToArray(None, STORAGE_KEY_CHILD_NAME)
     int matchingNames = JArray.object()
 
     int i = 0
@@ -146,30 +130,25 @@ string[] function SearchChildrenByName(string query) global
     return JArray.asStringArray(matchingNames)
 endFunction
 
-bool function IsChildEnabled(string name) global
-    return JMap.getInt(KidsEnabledByNameMap(), name) == 1
+bool function IsChildEnabled(string name)
+    int childIndex = StorageUtil.StringListFind(None, STORAGE_KEY_CHILD_NAME, name)
+    ObjectReference child = StorageUtil.FormListGet(None, STORAGE_KEY_CHILD_FORM, childIndex) as ObjectReference
+    return child.IsEnabled()
 endFunction
 
-bool function IsChildTracked(Actor child) global
-    return JMap.hasKey(KidsByNameMap(), child.GetActorBase().GetName())
+bool function IsChildTracked(Actor child)
+    return StorageUtil.FormListFind(None, STORAGE_KEY_CHILD_FORM, child) > -1
 endFunction
 
 ; Returns enabled state
-bool function ToggleChildEnabled(string name) global
-    Actor kiddo = JMap.getForm(KidsByNameMap(), name) as Actor
-    bool enabled = JMap.getInt(KidsEnabledByNameMap(), name) == 1
-    if enabled
-        ; Disable
-        JMap.setInt(KidsEnabledByNameMap(), name, 0)
-        kiddo.Disable()
+bool function ToggleChildEnabled(string name)
+    int childIndex = StorageUtil.StringListFind(None, STORAGE_KEY_CHILD_NAME, name)
+    ObjectReference child = StorageUtil.FormListGet(None, STORAGE_KEY_CHILD_FORM, childIndex) as ObjectReference
+    if child.IsEnabled()
+        child.Disable()
+        return false
     else
-        ; Enable
-        JMap.setInt(KidsEnabledByNameMap(), name, 1)
-        kiddo.Enable()
+        child.Enable()
+        return true
     endIf
-    return ! enabled
-endFunction
-
-; Hmmmmm? Will all children have unique names?
-Actor function GetChildByName(string name) global
 endFunction

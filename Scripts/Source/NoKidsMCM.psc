@@ -28,7 +28,7 @@ endEvent
 
 function LeftColumn()
     AddHeaderOption("Tracked Children")
-    oid_ChildCounter = AddTextOption("Count of tracked children", NoKids.GetTrackedChildCount())
+    oid_ChildCounter = AddTextOption("Count of tracked children", API.GetTrackedChildCount())
     oid_SearchInput = AddInputOption("Search for child by name", "SEARCH")
     if IsDispayingSearchResults
         IsDispayingSearchResults = false
@@ -61,7 +61,7 @@ function ShowSearchResults()
         int i = 0
         while i < CurrentSearchResultNames.Length
             string kidName = CurrentSearchResultNames[i]
-            CurrentSearchResultOptions[i] = AddToggleOption(kidName, NoKids.IsChildEnabled(kidName))
+            CurrentSearchResultOptions[i] = AddToggleOption(kidName, API.IsChildEnabled(kidName))
             i += 1
         endWhile
     endIf
@@ -105,7 +105,7 @@ event OnOptionMenuAccept(int _, int index)
 endEvent
 
 event OnOptionInputAccept(int _, string text)
-    CurrentSearchResultNames = NoKids.SearchChildrenByName(text)
+    CurrentSearchResultNames = API.SearchChildrenByName(text)
     if ! CurrentSearchResultNames
         Debug.MessageBox("No tracked childen found matching name:\n" + text)
     endIf
@@ -123,7 +123,7 @@ event OnOptionSelect(int optionId)
     else
         int childNameIndex = CurrentSearchResultOptions.Find(optionId)
         string kidName = CurrentSearchResultNames[childNameIndex]
-        bool enabled = NoKids.ToggleChildEnabled(kidName)
+        bool enabled = API.ToggleChildEnabled(kidName)
         SetToggleOptionValue(optionId, enabled)
     endIf
 endEvent
