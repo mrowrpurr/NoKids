@@ -10,6 +10,7 @@ int[]    ChildReplacementOptionFormIDs
 int oid_ChildCounter
 int oid_SearchInput
 int oid_ReplacementMenu
+int oid_ReplacementCount
 
 string[] CurrentSearchResultNames
 int[]    CurrentSearchResultOptions
@@ -54,6 +55,7 @@ endFunction
 function RightColumn()
     AddHeaderOption("Choose Child Replacement")
     oid_ReplacementMenu = AddMenuOption("Select what to replace childen with", ChildReplacementOptionNames[CurrentReplacementOptionIndex])
+    oid_ReplacementCount = AddSliderOption("Select count of replacement", 60)
 endFunction
 
 function ShowSearchResults()
@@ -109,4 +111,12 @@ event OnOptionSelect(int optionId)
     string kidName = CurrentSearchResultNames[childNameIndex]
     bool enabled = NoKids.ToggleChildEnabled(kidName)
     SetToggleOptionValue(optionId, enabled)
+endEvent
+
+; Dialog open
+event OnOptionSliderOpen(int option)
+endEvent
+
+; Dialog accept
+event OnOptionSliderAccept(int option, float value)
 endEvent

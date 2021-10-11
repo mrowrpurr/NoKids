@@ -1,0 +1,14 @@
+{
+	"form" : 
+	{
+		"replacement" : "0x4d6e7|Skyrim.esm"
+	},
+	"int" : 
+	{
+		"replacementcount" : 30
+	},
+	"string" : 
+	{
+		"enabled" : "TRUE"
+	}
+}

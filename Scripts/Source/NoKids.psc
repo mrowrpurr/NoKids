@@ -1,4 +1,4 @@
-scriptName NoKids hidden
+scriptName NoKids extends Quest
 {Stores the tracked children}
 
 int function NoKidsStorage() global

@@ -17,6 +17,9 @@
     <Imports>
         <Import>@ModsFolder\SKSE64\Scripts\Source</Import>
         <Import>@ImportsFolder\SkyUI_SDK\Scripts\Source</Import>
+        <Import>@ImportsFolder\PapyrusUtil\Scripts\Source</Import>
+
+        <!-- PORT TO PapyrusUtil -->
         <Import>@ImportsFolder\JContainers\Scripts\Source</Import>
         <Import>C:\Steam\steamapps\common\Skyrim Special Edition\Data\Scripts\Source</Import>
     </Imports>
