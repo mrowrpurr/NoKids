@@ -3,6 +3,7 @@ scriptName NoKidsMCM extends SKI_ConfigBase
 
 NoKids API
 
+int oid_ModEnabled
 int oid_ChildCounter
 int oid_SearchInput
 int oid_ReplacementMenu
@@ -36,6 +37,10 @@ function LeftColumn()
 endFunction
 
 function RightColumn()
+    AddHeaderOption("Enable / Disable")
+    oid_ModEnabled = AddToggleOption("Mod Enabled", API.ModEnabled)
+    AddEmptyOption()
+
     AddHeaderOption("Child Replacement")
     oid_ReplacementNotification = AddToggleOption("Show replacement notifications", API.ReplacementNotifications)
     oid_ReplacementMenu = AddMenuOption("Select what to replace childen with", API.ReplacementForm.GetName())
@@ -79,7 +84,10 @@ event OnOptionInputAccept(int _, string text)
 endEvent
 
 event OnOptionSelect(int optionId)
-    if optionId == oid_ReplacementNotification
+    if optionId == oid_ModEnabled
+        API.ModEnabled = ! API.ModEnabled
+        SetToggleOptionValue(optionId, API.ModEnabled)
+    elseIf optionId == oid_ReplacementNotification
         API.ReplacementNotifications = ! API.ReplacementNotifications
         SetToggleOptionValue(optionId, API.ReplacementNotifications)
     else

@@ -3,6 +3,8 @@ scriptName NoKids extends Quest
 
 Manages the configuration, versioning, and child storage.}
 
+bool property ModEnabled auto
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Mod Installation and Load Game Handling
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -10,10 +12,6 @@ Manages the configuration, versioning, and child storage.}
 float property CurrentlyInstalledModVersion auto
 
 event OnInit()
-    ; JsonUtil.FormListAdd(CONFIG_FILENAME, CONFIG_KEY_REPLACEMENT_OPTIONS, Game.GetForm(0xf))
-    ; JsonUtil.FormListAdd(CONFIG_FILENAME, CONFIG_KEY_REPLACEMENT_OPTIONS, Game.GetForm(0xa))
-    ; JsonUtil.Save(CONFIG_FILENAME)
-
     CurrentlyInstalledModVersion = GetCurrentVersion()
     LoadConfiguration()
 endEvent
@@ -36,6 +34,7 @@ endFunction
 
 string property CONFIG_FILENAME_DATA_PATH            = "Data/NoKids/Config.json"           autoReadonly
 string property CONFIG_FILENAME_FULL_PATH            = "../../../NoKids/Config.json"       autoReadonly
+string property CONFIG_KEY_MOD_ENABLED               = "nokids_mod_enabled"                autoReadonly
 string property CONFIG_KEY_REPLACEMENT_FORM          = "nokids_replacement_form"           autoReadonly
 string property CONFIG_KEY_REPLACEMENT_COUNT         = "nokids_replacement_count"          autoReadonly
 string property CONFIG_KEY_REPLACEMENT_OPTIONS       = "nokids_replacement_options"        autoReadonly
@@ -50,9 +49,10 @@ string[] property ReplacementOptionNames   auto
 function LoadConfiguration()
     SetDefaults()
     if MiscUtil.FileExists(CONFIG_FILENAME_DATA_PATH)
+        ModEnabled               = JsonUtil.GetStringValue(CONFIG_FILENAME_FULL_PATH, CONFIG_KEY_MOD_ENABLED) == "true"
         ReplacementForm          = JsonUtil.GetFormValue(CONFIG_FILENAME_FULL_PATH, CONFIG_KEY_REPLACEMENT_FORM)
         ReplacementFormCount     = JsonUtil.GetIntValue(CONFIG_FILENAME_FULL_PATH, CONFIG_KEY_REPLACEMENT_COUNT)
-        ReplacementNotifications = JsonUtil.GetStringValue(CONFIG_FILENAME_FULL_PATH, CONFIG_KEY_REPLACEMENT_NOTIFICATIONS) == "TRUE"
+        ReplacementNotifications = JsonUtil.GetStringValue(CONFIG_FILENAME_FULL_PATH, CONFIG_KEY_REPLACEMENT_NOTIFICATIONS) == "true"
         ReplacementOptionForms   = JsonUtil.FormListToArray(CONFIG_FILENAME_FULL_PATH, CONFIG_KEY_REPLACEMENT_OPTIONS)
         ResetFormNames()
     endIf
