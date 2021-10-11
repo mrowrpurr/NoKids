@@ -41,9 +41,11 @@ string property CONFIG_KEY_REPLACEMENT_COUNT         = "nokids_replacement_count
 string property CONFIG_KEY_REPLACEMENT_OPTIONS       = "nokids_replacement_options"        autoReadonly
 string property CONFIG_KEY_REPLACEMENT_NOTIFICATIONS = "nokids_replacement_notifications"  autoReadonly
 
-Form property ReplacementForm          auto
-int  property ReplacementFormCount     auto
-bool property ReplacementNotifications auto
+Form     property ReplacementForm          auto
+int      property ReplacementFormCount     auto
+bool     property ReplacementNotifications auto
+Form[]   property ReplacementOptionForms   auto
+string[] property ReplacementOptionNames   auto
 
 function LoadConfiguration()
     SetDefaults()
@@ -51,6 +53,8 @@ function LoadConfiguration()
         ReplacementForm          = JsonUtil.GetFormValue(CONFIG_FILENAME_FULL_PATH, CONFIG_KEY_REPLACEMENT_FORM)
         ReplacementFormCount     = JsonUtil.GetIntValue(CONFIG_FILENAME_FULL_PATH, CONFIG_KEY_REPLACEMENT_COUNT)
         ReplacementNotifications = JsonUtil.GetStringValue(CONFIG_FILENAME_FULL_PATH, CONFIG_KEY_REPLACEMENT_NOTIFICATIONS) == "TRUE"
+        ReplacementOptionForms   = JsonUtil.FormListToArray(CONFIG_FILENAME_FULL_PATH, CONFIG_KEY_REPLACEMENT_OPTIONS)
+        ResetFormNames()
     endIf
 endFunction
 
@@ -58,6 +62,17 @@ function SetDefaults()
     ReplacementForm          = Game.GetForm(0xA91A0) ; Chicken
     ReplacementFormCount     = 60
     ReplacementNotifications = true
+
+    ; Add Chicken, Dog, Mudcrab, Hod
+endFunction
+
+function ResetFormNames()
+    ReplacementOptionNames = Utility.CreateStringArray(ReplacementOptionForms.Length)
+    int i = 0
+    while i < ReplacementOptionForms.Length
+        ReplacementOptionNames[i] = ReplacementOptionForms[i].GetName()
+        i += 1
+    endWhile
 endFunction
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;

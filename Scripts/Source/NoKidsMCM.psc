@@ -3,11 +3,6 @@ scriptName NoKidsMCM extends SKI_ConfigBase
 
 NoKids API
 
-int CurrentReplacementOptionIndex = 0
-
-string[] ChildReplacementOptionNames
-int[]    ChildReplacementOptionFormIDs
-
 int oid_ChildCounter
 int oid_SearchInput
 int oid_ReplacementMenu
@@ -21,20 +16,6 @@ bool     IsDispayingSearchResults
 event OnConfigInit()
     API = (self as Quest) as NoKids
     ModName = "No Kids"
-    ChildReplacementOptionNames = new string[6]
-    ChildReplacementOptionNames[0] = "Chicken"
-    ChildReplacementOptionNames[1] = "Dog"
-    ChildReplacementOptionNames[2] = "Mudcrab"
-    ChildReplacementOptionNames[3] = "Hod"
-    ChildReplacementOptionNames[4] = "(Random)"
-    ChildReplacementOptionNames[5] = "(None)"
-    ChildReplacementOptionFormIDs = new int[5]
-    ChildReplacementOptionFormIDs[0] = 0xA91A0
-    ChildReplacementOptionFormIDs[1] = 0x23A92
-    ChildReplacementOptionFormIDs[2] = 0xE4010
-    ChildReplacementOptionFormIDs[3] = 0x1347D
-    ChildReplacementOptionFormIDs[4] = 0x0
-    ChildReplacementOptionFormIDs[5] = 0x0
 endEvent
 
 event OnPageReset(string _)
@@ -57,7 +38,7 @@ endFunction
 function RightColumn()
     AddHeaderOption("Child Replacement")
     oid_ReplacementNotification = AddToggleOption("Show replacement notifications", API.ReplacementNotifications)
-    oid_ReplacementMenu = AddMenuOption("Select what to replace childen with", ChildReplacementOptionNames[CurrentReplacementOptionIndex])
+    oid_ReplacementMenu = AddMenuOption("Select what to replace childen with", API.ReplacementForm.GetName())
     oid_ReplacementCount = AddSliderOption("Select count of replacement", API.ReplacementFormCount)
 endFunction
 
@@ -76,28 +57,16 @@ function ShowSearchResults()
 endFunction
 
 event OnOptionMenuOpen(int _)
-    SetMenuDialogOptions(ChildReplacementOptionNames)
+    SetMenuDialogOptions(API.ReplacementOptionNames)
 endEvent
 
 event OnOptionMenuAccept(int _, int index)
     if index == -1
         return
     endIf
-    CurrentReplacementOptionIndex = index
-    string name = ChildReplacementOptionNames[index]
-    int formId
-    if name == "(Random)"
-        int randomIndex = Utility.RandomInt(0, 3)
-        formId = ChildReplacementOptionFormIDs[randomIndex]
-    else
-        formId = ChildReplacementOptionFormIDs[index]
-    endIf
+    API.ReplacementForm = API.ReplacementOptionForms[index]
+    string name = API.ReplacementOptionNames[index]
     SetMenuOptionValue(oid_ReplacementMenu, name)
-    if formId
-        API.ReplacementForm = Game.GetForm(formId)
-    else
-        API.ReplacementForm = None
-    endIf
 endEvent
 
 event OnOptionInputAccept(int _, string text)
