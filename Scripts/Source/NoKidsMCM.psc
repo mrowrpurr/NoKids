@@ -43,7 +43,13 @@ function RightColumn()
 
     AddHeaderOption("Child Replacement")
     oid_ReplacementNotification = AddToggleOption("Show replacement notifications", API.ReplacementNotifications)
-    oid_ReplacementMenu = AddMenuOption("Select what to replace childen with", API.ReplacementForm.GetName())
+    if API.ReplacementIsRandom
+        oid_ReplacementMenu = AddMenuOption("Select what to replace childen with", "(Random)")
+    elseIf API.ReplacementForm
+        oid_ReplacementMenu = AddMenuOption("Select what to replace childen with", API.ReplacementForm.GetName())
+    else
+        oid_ReplacementMenu = AddMenuOption("Select what to replace childen with", "(None)")
+    endIf
     oid_ReplacementCount = AddSliderOption("Select count of replacement", API.ReplacementFormCount)
 endFunction
 
@@ -61,17 +67,41 @@ function ShowSearchResults()
     endIf
 endFunction
 
+string[] function GetReplacementMenuOptions()
+    string[] options = Utility.CreateStringArray(API.ReplacementOptionNames.Length + 2)
+    options[0] = "(None)"
+    options[1] = "(Random)"
+    int nameIndex = 0
+    int optionIndex = 2
+    while nameIndex < API.ReplacementOptionNames.Length
+        options[optionIndex] = API.ReplacementOptionNames[nameIndex]
+        optionIndex += 1
+        nameIndex += 1
+    endWhile
+    return options
+endFunction
+
 event OnOptionMenuOpen(int _)
-    SetMenuDialogOptions(API.ReplacementOptionNames)
+    SetMenuDialogOptions(GetReplacementMenuOptions())
 endEvent
 
 event OnOptionMenuAccept(int _, int index)
     if index == -1
         return
+    elseIf index == 0 ; None
+        API.ReplacementForm = None
+        API.ReplacementIsRandom = false
+        SetMenuOptionValue(oid_ReplacementMenu, "(None)")
+    elseIf index == 1 ; Random
+        API.ReplacementForm = None
+        API.ReplacementIsRandom = true
+        SetMenuOptionValue(oid_ReplacementMenu, "(Random)")
+    else
+        API.ReplacementIsRandom = false
+        API.ReplacementForm = API.ReplacementOptionForms[index - 2]
+        string name = API.ReplacementOptionNames[index - 2]
+        SetMenuOptionValue(oid_ReplacementMenu, name)
     endIf
-    API.ReplacementForm = API.ReplacementOptionForms[index]
-    string name = API.ReplacementOptionNames[index]
-    SetMenuOptionValue(oid_ReplacementMenu, name)
 endEvent
 
 event OnOptionInputAccept(int _, string text)

@@ -38,8 +38,10 @@ string property CONFIG_KEY_MOD_ENABLED               = "nokids_mod_enabled"     
 string property CONFIG_KEY_REPLACEMENT_FORM          = "nokids_replacement_form"           autoReadonly
 string property CONFIG_KEY_REPLACEMENT_COUNT         = "nokids_replacement_count"          autoReadonly
 string property CONFIG_KEY_REPLACEMENT_OPTIONS       = "nokids_replacement_options"        autoReadonly
+string property CONFIG_KEY_REPLACEMENT_RANDOM        = "nokids_replacement_random"         autoReadonly
 string property CONFIG_KEY_REPLACEMENT_NOTIFICATIONS = "nokids_replacement_notifications"  autoReadonly
 
+bool     property ReplacementIsRandom      auto
 Form     property ReplacementForm          auto
 int      property ReplacementFormCount     auto
 bool     property ReplacementNotifications auto
@@ -54,7 +56,11 @@ function LoadConfiguration()
         ReplacementFormCount     = JsonUtil.GetIntValue(CONFIG_FILENAME_FULL_PATH, CONFIG_KEY_REPLACEMENT_COUNT)
         ReplacementNotifications = JsonUtil.GetStringValue(CONFIG_FILENAME_FULL_PATH, CONFIG_KEY_REPLACEMENT_NOTIFICATIONS) == "true"
         ReplacementOptionForms   = JsonUtil.FormListToArray(CONFIG_FILENAME_FULL_PATH, CONFIG_KEY_REPLACEMENT_OPTIONS)
+        ReplacementIsRandom      = JsonUtil.GetStringValue(CONFIG_FILENAME_FULL_PATH, CONFIG_KEY_REPLACEMENT_RANDOM) == "true"
         ResetFormNames()
+        if ReplacementIsRandom
+            ReplacementForm = None
+        endIf
     endIf
 endFunction
 
@@ -62,8 +68,11 @@ function SetDefaults()
     ReplacementForm          = Game.GetForm(0xA91A0) ; Chicken
     ReplacementFormCount     = 60
     ReplacementNotifications = true
+    ReplacementIsRandom      = false
 
-    ; Add Chicken, Dog, Mudcrab, Hod
+    if ReplacementIsRandom
+        ReplacementForm = None
+    endIf
 endFunction
 
 function ResetFormNames()
@@ -73,6 +82,19 @@ function ResetFormNames()
         ReplacementOptionNames[i] = ReplacementOptionForms[i].GetName()
         i += 1
     endWhile
+endFunction
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Replacement Forms
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+Form function GetReplacementForm()
+    if ReplacementIsRandom
+        int randomIndex = Utility.RandomInt(0, ReplacementOptionForms.Length - 1)
+        return ReplacementOptionForms[randomIndex]
+    else
+        return ReplacementForm
+    endIf
 endFunction
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
