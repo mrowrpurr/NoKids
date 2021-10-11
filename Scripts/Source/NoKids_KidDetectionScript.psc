@@ -5,15 +5,19 @@ NoKids property API auto
 event OnEffectStart(Actor target, Actor caster)
     if ! NoKids.IsChildTracked(target)
         NoKids.TrackChild(target)
-
-        target.Disable()
-
         Form replacement = API.ReplacementForm
-        
-        ; TODO Add Notification option
 
         if replacement
+            if API.ReplacementNotifications
+                Debug.Notification(target.GetActorBase().GetName() + " replaced with " + API.ReplacementFormCount + "x " + replacement.GetName())
+            endIf
+            target.Disable()
             target.PlaceAtMe(replacement, API.ReplacementFormCount)
+        else
+            if API.ReplacementNotifications
+                Debug.Notification(target.GetActorBase().GetName() + " hidden")
+            endIf
+            target.Disable()
         endIf
     endIf
 endEvent

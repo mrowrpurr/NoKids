@@ -18,7 +18,6 @@
 	},
 	"string" : 
 	{
-		"nokids_enabled" : "TRUE",
-		"is_this_working": "Yes it is"
+		"nokids_replacement_notifications": "TRUE"
 	}
 }

@@ -12,6 +12,7 @@ int oid_ChildCounter
 int oid_SearchInput
 int oid_ReplacementMenu
 int oid_ReplacementCount
+int oid_ReplacementNotification
 
 string[] CurrentSearchResultNames
 int[]    CurrentSearchResultOptions
@@ -54,7 +55,8 @@ function LeftColumn()
 endFunction
 
 function RightColumn()
-    AddHeaderOption("Choose Child Replacement")
+    AddHeaderOption("Child Replacement")
+    oid_ReplacementNotification = AddToggleOption("Show replacement notifications", API.ReplacementNotifications)
     oid_ReplacementMenu = AddMenuOption("Select what to replace childen with", ChildReplacementOptionNames[CurrentReplacementOptionIndex])
     oid_ReplacementCount = AddSliderOption("Select count of replacement", API.ReplacementFormCount)
 endFunction
@@ -108,10 +110,15 @@ event OnOptionInputAccept(int _, string text)
 endEvent
 
 event OnOptionSelect(int optionId)
-    int childNameIndex = CurrentSearchResultOptions.Find(optionId)
-    string kidName = CurrentSearchResultNames[childNameIndex]
-    bool enabled = NoKids.ToggleChildEnabled(kidName)
-    SetToggleOptionValue(optionId, enabled)
+    if optionId == oid_ReplacementNotification
+        API.ReplacementNotifications = ! API.ReplacementNotifications
+        SetToggleOptionValue(optionId, API.ReplacementNotifications)
+    else
+        int childNameIndex = CurrentSearchResultOptions.Find(optionId)
+        string kidName = CurrentSearchResultNames[childNameIndex]
+        bool enabled = NoKids.ToggleChildEnabled(kidName)
+        SetToggleOptionValue(optionId, enabled)
+    endIf
 endEvent
 
 event OnOptionSliderOpen(int optionId)

@@ -34,27 +34,30 @@ endFunction
 ;; Configuration
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-string property CONFIG_FILENAME_DATA_PATH      = "Data/NoKids/Config.json" autoReadonly
-string property CONFIG_FILENAME_FULL_PATH      = "../../../NoKids/Config.json" autoReadonly
-string property CONFIG_KEY_REPLACEMENT_FORM    = "nokids_replacement_form"     autoReadonly
-string property CONFIG_KEY_REPLACEMENT_COUNT   = "nokids_replacement_count"    autoReadonly
-string property CONFIG_KEY_REPLACEMENT_OPTIONS = "nokids_replacement_options"  autoReadonly
+string property CONFIG_FILENAME_DATA_PATH            = "Data/NoKids/Config.json"           autoReadonly
+string property CONFIG_FILENAME_FULL_PATH            = "../../../NoKids/Config.json"       autoReadonly
+string property CONFIG_KEY_REPLACEMENT_FORM          = "nokids_replacement_form"           autoReadonly
+string property CONFIG_KEY_REPLACEMENT_COUNT         = "nokids_replacement_count"          autoReadonly
+string property CONFIG_KEY_REPLACEMENT_OPTIONS       = "nokids_replacement_options"        autoReadonly
+string property CONFIG_KEY_REPLACEMENT_NOTIFICATIONS = "nokids_replacement_notifications"  autoReadonly
 
-Form property ReplacementForm      auto
-int  property ReplacementFormCount auto
+Form property ReplacementForm          auto
+int  property ReplacementFormCount     auto
+bool property ReplacementNotifications auto
 
 function LoadConfiguration()
     SetDefaults()
     if MiscUtil.FileExists(CONFIG_FILENAME_DATA_PATH)
-        string isThisWorking = JsonUtil.GetStringValue(CONFIG_FILENAME_FULL_PATH, "is_this_working")
-        ReplacementForm      = JsonUtil.GetFormValue(CONFIG_FILENAME_FULL_PATH, CONFIG_KEY_REPLACEMENT_FORM)
-        ReplacementFormCount = JsonUtil.GetIntValue(CONFIG_FILENAME_FULL_PATH, CONFIG_KEY_REPLACEMENT_COUNT)
+        ReplacementForm          = JsonUtil.GetFormValue(CONFIG_FILENAME_FULL_PATH, CONFIG_KEY_REPLACEMENT_FORM)
+        ReplacementFormCount     = JsonUtil.GetIntValue(CONFIG_FILENAME_FULL_PATH, CONFIG_KEY_REPLACEMENT_COUNT)
+        ReplacementNotifications = JsonUtil.GetStringValue(CONFIG_FILENAME_FULL_PATH, CONFIG_KEY_REPLACEMENT_NOTIFICATIONS) == "TRUE"
     endIf
 endFunction
 
 function SetDefaults()
-    ReplacementForm      = Game.GetForm(0xA91A0) ; Chicken
-    ReplacementFormCount = 60
+    ReplacementForm          = Game.GetForm(0xA91A0) ; Chicken
+    ReplacementFormCount     = 60
+    ReplacementNotifications = true
 endFunction
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
