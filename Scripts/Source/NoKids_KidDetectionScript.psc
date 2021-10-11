@@ -9,6 +9,9 @@ event OnEffectStart(Actor target, Actor caster)
         target.Disable()
 
         Form replacement = API.ReplacementForm
+        
+        ; TODO Add Notification option
+
         if replacement
             target.PlaceAtMe(replacement, API.ReplacementFormCount)
         endIf

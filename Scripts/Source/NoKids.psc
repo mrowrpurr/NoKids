@@ -10,9 +10,9 @@ Manages the configuration, versioning, and child storage.}
 float property CurrentlyInstalledModVersion auto
 
 event OnInit()
-    JsonUtil.FormListAdd(CONFIG_FILENAME, CONFIG_KEY_REPLACEMENT_OPTIONS, Game.GetForm(0xf))
-    JsonUtil.FormListAdd(CONFIG_FILENAME, CONFIG_KEY_REPLACEMENT_OPTIONS, Game.GetForm(0xa))
-    JsonUtil.Save(CONFIG_FILENAME)
+    ; JsonUtil.FormListAdd(CONFIG_FILENAME, CONFIG_KEY_REPLACEMENT_OPTIONS, Game.GetForm(0xf))
+    ; JsonUtil.FormListAdd(CONFIG_FILENAME, CONFIG_KEY_REPLACEMENT_OPTIONS, Game.GetForm(0xa))
+    ; JsonUtil.Save(CONFIG_FILENAME)
 
     CurrentlyInstalledModVersion = GetCurrentVersion()
     LoadConfiguration()
@@ -34,7 +34,8 @@ endFunction
 ;; Configuration
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-string property CONFIG_FILENAME                = "../../../NoKids/Config.json" autoReadonly
+string property CONFIG_FILENAME_DATA_PATH      = "Data/NoKids/Config.json" autoReadonly
+string property CONFIG_FILENAME_FULL_PATH      = "../../../NoKids/Config.json" autoReadonly
 string property CONFIG_KEY_REPLACEMENT_FORM    = "nokids_replacement_form"     autoReadonly
 string property CONFIG_KEY_REPLACEMENT_COUNT   = "nokids_replacement_count"    autoReadonly
 string property CONFIG_KEY_REPLACEMENT_OPTIONS = "nokids_replacement_options"  autoReadonly
@@ -44,9 +45,10 @@ int  property ReplacementFormCount auto
 
 function LoadConfiguration()
     SetDefaults()
-    if MiscUtil.FileExists(CONFIG_FILENAME)
-        ReplacementForm      = JsonUtil.GetFormValue(CONFIG_FILENAME, CONFIG_KEY_REPLACEMENT_FORM)
-        ReplacementFormCount = JsonUtil.GetIntValue(CONFIG_FILENAME, CONFIG_KEY_REPLACEMENT_COUNT)
+    if MiscUtil.FileExists(CONFIG_FILENAME_DATA_PATH)
+        string isThisWorking = JsonUtil.GetStringValue(CONFIG_FILENAME_FULL_PATH, "is_this_working")
+        ReplacementForm      = JsonUtil.GetFormValue(CONFIG_FILENAME_FULL_PATH, CONFIG_KEY_REPLACEMENT_FORM)
+        ReplacementFormCount = JsonUtil.GetIntValue(CONFIG_FILENAME_FULL_PATH, CONFIG_KEY_REPLACEMENT_COUNT)
     endIf
 endFunction
 
