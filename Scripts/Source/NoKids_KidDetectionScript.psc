@@ -1,6 +1,6 @@
 scriptName NoKids_KidDetectionScript extends ActiveMagicEffect  
 
-NoKidsMCM property Config auto
+NoKids property API auto
 
 event OnEffectStart(Actor target, Actor caster)
     if ! NoKids.IsChildTracked(target)
@@ -8,9 +8,9 @@ event OnEffectStart(Actor target, Actor caster)
 
         target.Disable()
 
-        Form replacement = Config.CurrentChildReplacementBaseForm
+        Form replacement = API.ReplacementForm
         if replacement
-            target.PlaceAtMe(replacement, 60)
+            target.PlaceAtMe(replacement, API.ReplacementFormCount)
         endIf
     endIf
 endEvent

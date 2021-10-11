@@ -3,6 +3,10 @@
 	{
 		"replacement" : "0x4d6e7|Skyrim.esm"
 	},
+	"formList" : 
+	{
+		"nokids_replacement_options" : [ "0x4d6e7|Skyrim.esm", "0xf|Skyrim.esm", "0xa|Skyrim.esm" ]
+	},
 	"int" : 
 	{
 		"replacementcount" : 30

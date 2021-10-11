@@ -1,8 +1,9 @@
 scriptName NoKidsMCM extends SKI_ConfigBase
 {SkyUI Mod Configuration Menu for "No Kids"}
 
+NoKids API
+
 int CurrentReplacementOptionIndex = 0
-Form property CurrentChildReplacementBaseForm auto
 
 string[] ChildReplacementOptionNames
 int[]    ChildReplacementOptionFormIDs
@@ -17,8 +18,8 @@ int[]    CurrentSearchResultOptions
 bool     IsDispayingSearchResults
 
 event OnConfigInit()
+    API = (self as Quest) as NoKids
     ModName = "No Kids"
-    CurrentChildReplacementBaseForm = Game.GetForm(0xA91A0)
     ChildReplacementOptionNames = new string[6]
     ChildReplacementOptionNames[0] = "Chicken"
     ChildReplacementOptionNames[1] = "Dog"
@@ -55,7 +56,7 @@ endFunction
 function RightColumn()
     AddHeaderOption("Choose Child Replacement")
     oid_ReplacementMenu = AddMenuOption("Select what to replace childen with", ChildReplacementOptionNames[CurrentReplacementOptionIndex])
-    oid_ReplacementCount = AddSliderOption("Select count of replacement", 60)
+    oid_ReplacementCount = AddSliderOption("Select count of replacement", API.ReplacementFormCount)
 endFunction
 
 function ShowSearchResults()
@@ -91,9 +92,9 @@ event OnOptionMenuAccept(int _, int index)
     endIf
     SetMenuOptionValue(oid_ReplacementMenu, name)
     if formId
-        CurrentChildReplacementBaseForm = Game.GetForm(formId)
+        API.ReplacementForm = Game.GetForm(formId)
     else
-        CurrentChildReplacementBaseForm = None
+        API.ReplacementForm = None
     endIf
 endEvent
 
@@ -113,10 +114,18 @@ event OnOptionSelect(int optionId)
     SetToggleOptionValue(optionId, enabled)
 endEvent
 
-; Dialog open
-event OnOptionSliderOpen(int option)
+event OnOptionSliderOpen(int optionId)
+    if optionId == oid_ReplacementCount
+        SetSliderDialogInterval(1)
+        SetSliderDialogRange(1, 1000)
+        SetSliderDialogStartValue(API.ReplacementFormCount)
+        SetSliderDialogDefaultValue(API.ReplacementFormCount)
+    endIf
 endEvent
 
-; Dialog accept
-event OnOptionSliderAccept(int option, float value)
+event OnOptionSliderAccept(int optionId, float value)
+    if optionId == oid_ReplacementCount
+        API.ReplacementFormCount = value as int
+        SetSliderOptionValue(optionId, value)
+    endIf
 endEvent

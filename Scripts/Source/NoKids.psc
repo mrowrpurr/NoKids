@@ -1,5 +1,63 @@
 scriptName NoKids extends Quest
-{Stores the tracked children}
+{Main script for NoKids
+
+Manages the configuration, versioning, and child storage.}
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Mod Installation and Load Game Handling
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+float property CurrentlyInstalledModVersion auto
+
+event OnInit()
+    JsonUtil.FormListAdd(CONFIG_FILENAME, CONFIG_KEY_REPLACEMENT_OPTIONS, Game.GetForm(0xf))
+    JsonUtil.FormListAdd(CONFIG_FILENAME, CONFIG_KEY_REPLACEMENT_OPTIONS, Game.GetForm(0xa))
+    JsonUtil.Save(CONFIG_FILENAME)
+
+    CurrentlyInstalledModVersion = GetCurrentVersion()
+    LoadConfiguration()
+endEvent
+
+event PlayerLoadGame()
+    ; Here in case we need to capture the load game event
+endEvent
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Mod Versioning
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+float function GetCurrentVersion() global
+    return 1.0
+endFunction
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Configuration
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+string property CONFIG_FILENAME                = "../../../NoKids/Config.json" autoReadonly
+string property CONFIG_KEY_REPLACEMENT_FORM    = "nokids_replacement_form"     autoReadonly
+string property CONFIG_KEY_REPLACEMENT_COUNT   = "nokids_replacement_count"    autoReadonly
+string property CONFIG_KEY_REPLACEMENT_OPTIONS = "nokids_replacement_options"  autoReadonly
+
+Form property ReplacementForm      auto
+int  property ReplacementFormCount auto
+
+function LoadConfiguration()
+    SetDefaults()
+    if MiscUtil.FileExists(CONFIG_FILENAME)
+        ReplacementForm      = JsonUtil.GetFormValue(CONFIG_FILENAME, CONFIG_KEY_REPLACEMENT_FORM)
+        ReplacementFormCount = JsonUtil.GetIntValue(CONFIG_FILENAME, CONFIG_KEY_REPLACEMENT_COUNT)
+    endIf
+endFunction
+
+function SetDefaults()
+    ReplacementForm      = Game.GetForm(0xA91A0) ; Chicken
+    ReplacementFormCount = 60
+endFunction
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 int function NoKidsStorage() global
     int kidsStorage = JDB.solveObj(".noKids")
