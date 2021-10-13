@@ -1,4 +1,4 @@
-![No Kids](Images/no_kids.png)
+![No Kids](Images/no_kids_small.png)
 
 # No Kids
 
