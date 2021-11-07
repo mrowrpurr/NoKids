@@ -1,0 +1,26 @@
+{
+	"form" : 
+	{
+		"nokids_replacement_form" : ""
+	},
+	"formList" : 
+	{
+		"nokids_replacement_options" : 
+		[
+			"692640|Skyrim.esm",
+			"146066|Skyrim.esm",
+			"933904|Skyrim.esm",
+			"78973|Skyrim.esm"
+		]
+	},
+	"int" : 
+	{
+		"nokids_replacement_count" : 60
+	},
+	"string" : 
+	{
+		"nokids_replacement_notifications": "true",
+		"nokids_mod_enabled": "true",
+		"nokids_replacement_random": "false"
+	}
+}

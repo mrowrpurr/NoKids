@@ -116,18 +116,24 @@ endFunction
 
 string[] function SearchChildrenByName(string query)
     string[] kidNames = StorageUtil.StringListToArray(None, STORAGE_KEY_CHILD_NAME)
-    int matchingNames = JArray.object()
+    string[] matchingNames
 
     int i = 0
     while i < kidNames.Length
         string name = kidNames[i]
         if StringUtil.Find(name, query) > -1
-            JArray.addStr(matchingNames, name)
+            if matchingNames
+                matchingNames = Utility.ResizeStringArray(matchingNames, matchingNames.Length)
+                matchingNames[matchingNames.Length - 1] = name
+            else
+                matchingNames = new string[1]
+                matchingNames[0] = name
+            endIf
         endIf
         i += 1
     endWhile
 
-    return JArray.asStringArray(matchingNames)
+    return matchingNames
 endFunction
 
 bool function IsChildEnabled(string name)

@@ -6,14 +6,14 @@
     Output="Scripts" 
     Optimize="false" 
     Release="false" 
-    Zip="false"
-    Package="false"
+    Zip="true"
+    Package="true"
     Final="false">
     <Variables>
         <Variable Name="ModName" Value="NoKids" />
         <Variable Name="ModVersion" Value="v1.1" />
-        <Variable Name="ModType" Value="Chickens" />
-        <Variable Name="SkyrimVersion" Value="SE" />
+        <Variable Name="ModType" Value="HideChildren" />
+        <Variable Name="SkyrimVersion" Value="LE" />
         <Variable Name="ModsFolder" Value="C:\Users\mrowr\Dropbox\Skyrim\Mods" />
         <Variable Name="ImportsFolder" Value="C:\Users\mrowr\Dropbox\Skyrim\Imports" />
     </Variables>
@@ -26,8 +26,25 @@
     <Folders>
         <Folder>./Scripts/Source</Folder>
     </Folders>
+    <Packages Output=".">
+        <Package Name="@ModName" RootDir=".">
+            <Match In="Scripts">*.pex</Match>
+            <Match In="Scripts\Source">*.psc</Match>
+        </Package>
+    </Packages>
+    <!-- The following section is for .zip archive. You can enable it by setting Zip="true" in the PapyrusProject -->
+    <ZipFiles Output="Build">
+        <ZipFile Name="@ModName-@ModVersion-@ModType @SkyrimVersion" RootDir="." Compression="deflate">
+            <Include>NoKids\Config.json</Include>
+            <Include>@ModName.esp</Include>
+            <Include NoRecurse="true">*.bsa</Include>
+        </ZipFile>
+    </ZipFiles>
     <PreBuildEvent Description="Pre-Build Setup for SE or LE" UseInBuild="true">
         <Command>copy NoKids\Config.@SkyrimVersion.@ModType.json NoKids\Config.json</Command>
         <Command>copy NoKids.@SkyrimVersion.esp NoKids.esp</Command>
     </PreBuildEvent>
+    <PostBuildEvent Description="Post-Build Remove BSA Files" UseInBuild="true">
+        <Command>del /s /q /f *.bsa</Command>
+    </PostBuildEvent>
 </PapyrusProject>
