@@ -14,14 +14,13 @@
         <Variable Name="ModVersion" Value="v1.2.1" />
         <Variable Name="ModType" Value="Chickens" />
         <Variable Name="SkyrimVersion" Value="SE" />
-        <Variable Name="ModsFolder" Value="C:\Users\mrowr\Dropbox\Skyrim\Mods" />
-        <Variable Name="ImportsFolder" Value="C:\Users\mrowr\Dropbox\Skyrim\Imports" />
+        <Variable Name="ImportsFolder" Value="C:\Users\mrowr\Dropbox\Skyrim\Papyrus Imports" />
     </Variables>
     <Imports>
-        <Import>@ModsFolder\SKSE64\Scripts\Source</Import>
+        <Import>@ImportsFolder\SE\SKSE\Scripts\Source</Import>
         <Import>@ImportsFolder\SkyUI_SDK\Scripts\Source</Import>
         <Import>@ImportsFolder\PapyrusUtil\Scripts\Source</Import>
-        <Import>C:\Steam\steamapps\common\Skyrim Special Edition\Data\Scripts\Source</Import>
+        <Import>C:\Program Files (x86)\Steam\steamapps\common\Skyrim SE with Creation Kit\Data\Scripts\Source</Import>
     </Imports>
     <Folders>
         <Folder>./Scripts/Source</Folder>
